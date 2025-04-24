@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@source "../../.flowbite-react/class-list.json";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@theme {
+  --color-primary: #a435f0;
+  --color-secondary: #1F1D0D;
+  --color-border-color: #f3e6fc;
+}
+
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+.shadow{
+  box-shadow: -12px 12px 0px black;
+}
+.font-Barlow {
+  font-family: "Barlow", sans-serif;
+}
+
+::-webkit-scrollbar {
+  display: none; 
+}
+
+html {
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+.MainPagination ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  margin-top: 20px;
+}
+.MainPagination ul li button{
+  background-color: white;
+color: black;
+cursor: pointer;
+border-radius: 5px;
+margin-left: 10px;
+}
+.MainPagination ul li button:hover{
+  background-color: #A435F0 !important;
+  border: none;
+color: white;
+transition: all .3s ease-in-out;
+}
