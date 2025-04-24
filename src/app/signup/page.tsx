@@ -1,12 +1,11 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { IoCheckmark } from "react-icons/io5";
 import SignUpInputFields from "../components/SignUp/SignUpInputFields";
-import { FaFacebookF, FaGoogle, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaFacebookF, FaGoogle, FaTwitter } from "react-icons/fa";
 import { FooterSocialLinks } from "../components/footer/FooterSocialLinks";
 
-const page = () => {
+const Page = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -249,4 +248,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

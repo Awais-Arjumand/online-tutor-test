@@ -8,6 +8,15 @@ import { RxCross2 } from "react-icons/rx";
 import { toast, ToastContainer } from "react-toastify";
 import BoxChips from "./BoxChips";
 import BoxChipsCourses from "./BoxChipsCourses";
+import {
+  ClassOrSubject,
+  Course,
+  Experience,
+  FormData,
+  OptionType,
+  QualFormData,
+  Qualification,
+} from "./Register_a_tutor";
 
 interface Request_a_tutorBoxesProps {
   heading: string;
@@ -17,14 +26,14 @@ interface Request_a_tutorBoxesProps {
   Experience: string;
   Description: string;
   // State props
-  experiences: { instituteName: string; SubjectTeacher: string; Experience: string; Description: string }[];
-  setExperiences: React.Dispatch<React.SetStateAction<any[]>>;
-  qualifications: any[];
-  setQualifications: React.Dispatch<React.SetStateAction<any[]>>;
-  classOrSubjects: any[];
-  setClassOrSubjects: React.Dispatch<React.SetStateAction<any[]>>;
-  courses: any[];
-  setCourses: React.Dispatch<React.SetStateAction<any[]>>;
+  experiences: Experience[];
+  setExperiences: (value: Experience[]) => void;
+  qualifications: Qualification[];
+  setQualifications: React.Dispatch<React.SetStateAction<Qualification[]>>;
+  classOrSubjects: ClassOrSubject[];
+  setClassOrSubjects: React.Dispatch<React.SetStateAction<ClassOrSubject[]>>;
+  courses: Course[];
+  setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   // Modal states
   isExpModalOpen: boolean;
   setIsExpModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,29 +44,24 @@ interface Request_a_tutorBoxesProps {
   isCoursesModalOpen: boolean;
   setIsCoursesModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   // Form data
-  expFormData: any;
-  setExpFormData: React.Dispatch<React.SetStateAction<any>>;
-  qualFormData: any;
-  setQualFormData: React.Dispatch<React.SetStateAction<any>>;
+  expFormData: FormData;
+  setExpFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  qualFormData: QualFormData;
+  setQualFormData: React.Dispatch<React.SetStateAction<QualFormData>>;
   // Select options
-  ClassselectedOption: any[];
-  setClassSelectedOption: React.Dispatch<React.SetStateAction<any[]>>;
-  SubjectselectedOption: any[];
-  setSubjectSelectedOption: React.Dispatch<React.SetStateAction<any[]>>;
-  CoursesSelectedOption: any[];
-  setCoursesSelectedOption: React.Dispatch<React.SetStateAction<any[]>>;
+  ClassselectedOption: OptionType[];
+  setClassSelectedOption: React.Dispatch<React.SetStateAction<OptionType[]>>;
+  SubjectselectedOption: OptionType[];
+  setSubjectSelectedOption: React.Dispatch<React.SetStateAction<OptionType[]>>;
+  CoursesSelectedOption: OptionType[];
+  setCoursesSelectedOption: React.Dispatch<React.SetStateAction<OptionType[]>>;
   // Edit state
   editIndex: number | null;
   setEditIndex: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const Request_a_tutorBoxes = ({
-   heading,
-   src,
-  instituteName,
-  SubjectTeacher,
-  Experience,
-  Description,
+  heading,
   experiences,
   setExperiences,
   qualifications,
@@ -74,10 +78,7 @@ const Request_a_tutorBoxes = ({
   setIsClassOrSubjectModalOpen,
   isCoursesModalOpen,
   setIsCoursesModalOpen,
-  expFormData,
-  setExpFormData,
-  qualFormData,
-  setQualFormData,
+
   ClassselectedOption,
   setClassSelectedOption,
   SubjectselectedOption,
@@ -85,13 +86,8 @@ const Request_a_tutorBoxes = ({
   CoursesSelectedOption,
   setCoursesSelectedOption,
   editIndex,
-  setEditIndex
-
-
- }: Request_a_tutorBoxesProps) => {
- 
- 
-
+  setEditIndex,
+}: Request_a_tutorBoxesProps) => {
   const [formData, setFormData] = useState({
     instituteName: "",
     designation: "",
@@ -114,16 +110,13 @@ const Request_a_tutorBoxes = ({
     description: "",
   });
 
-  const [ClassOrSubjectData, setClassOrSubjectData] = useState({
+  const [, setClassOrSubjectData] = useState({
     selectedClasses: [] as string[],
     selectedSubjects: [] as string[],
   });
   const [CoursesData, setCoursesData] = useState({
     selectedCourses: [] as string[],
   });
-
-
-
 
   const Classoptions = [
     { value: "1", label: "1" },
@@ -236,23 +229,40 @@ const Request_a_tutorBoxes = ({
 
   const handleSubmit = () => {
     if (heading === "Teaching Experience") {
-      const { instituteName, designation, startMonth, startYear, endMonth, endYear, currentlyWorking, description } = formData;
-  
-      if (!instituteName || !designation || !startMonth || !startYear || (!currentlyWorking && (!endMonth || !endYear))) {
+      const {
+        instituteName,
+        designation,
+        startMonth,
+        startYear,
+        endMonth,
+        endYear,
+        currentlyWorking,
+        description,
+      } = formData;
+
+      if (
+        !instituteName ||
+        !designation ||
+        !startMonth ||
+        !startYear ||
+        (!currentlyWorking && (!endMonth || !endYear))
+      ) {
         toast.error("Please fill all required fields!", {
           position: "top-right",
           autoClose: 3000,
         });
         return;
       }
-  
+
       const experienceEntry = {
         instituteName,
         SubjectTeacher: designation,
-        Experience: `${startMonth} ${startYear} - ${currentlyWorking ? "Present" : `${endMonth} ${endYear}`}`,
+        Experience: `${startMonth} ${startYear} - ${
+          currentlyWorking ? "Present" : `${endMonth} ${endYear}`
+        }`,
         Description: description,
       };
-  
+
       if (editIndex !== null) {
         const updated = [...experiences];
         updated[editIndex] = experienceEntry;
@@ -260,7 +270,7 @@ const Request_a_tutorBoxes = ({
       } else {
         setExperiences([...experiences, experienceEntry]);
       }
-  
+
       // Reset form
       setFormData({
         instituteName: "",
@@ -273,27 +283,44 @@ const Request_a_tutorBoxes = ({
         description: "",
       });
       setIsExpModalOpen(false);
-    }
-  
-    else if (heading === "Your Qualification") {
-      const { degree, institute, fieldOfStudy, startMonth, startYear, endMonth, endYear, currentlyStudying, description } = qualificationData;
-  
-      if (!institute || !degree || !fieldOfStudy || !startMonth || !startYear || (!currentlyStudying && (!endMonth || !endYear))) {
+    } else if (heading === "Your Qualification") {
+      const {
+        degree,
+        institute,
+        fieldOfStudy,
+        startMonth,
+        startYear,
+        endMonth,
+        endYear,
+        currentlyStudying,
+        description,
+      } = qualificationData;
+
+      if (
+        !institute ||
+        !degree ||
+        !fieldOfStudy ||
+        !startMonth ||
+        !startYear ||
+        (!currentlyStudying && (!endMonth || !endYear))
+      ) {
         toast.error("Please fill all required fields!", {
           position: "top-right",
           autoClose: 3000,
         });
         return;
       }
-  
+
       const qualificationEntry = {
         degree,
         institute,
         fieldOfStudy,
-        year: `${startMonth} ${startYear} - ${currentlyStudying ? "Present" : `${endMonth} ${endYear}`}`,
+        year: `${startMonth} ${startYear} - ${
+          currentlyStudying ? "Present" : `${endMonth} ${endYear}`
+        }`,
         description,
       };
-  
+
       if (editIndex !== null) {
         const updated = [...qualifications];
         updated[editIndex] = qualificationEntry;
@@ -301,7 +328,7 @@ const Request_a_tutorBoxes = ({
       } else {
         setQualifications([...qualifications, qualificationEntry]);
       }
-  
+
       // Reset form
       setQualificationData({
         degree: "",
@@ -315,16 +342,16 @@ const Request_a_tutorBoxes = ({
         description: "",
       });
       setIsQualModalOpen(false);
-    }
-  
-    else if (heading === "Classes and Subjects") {
-      const selectedClasses = ClassselectedOption.map((option: { value: string | number; label: string }) =>
-        option.value.toString()
+    } else if (heading === "Classes and Subjects") {
+      const selectedClasses = ClassselectedOption.map(
+        (option: { value: string | number; label: string }) =>
+          option.value.toString()
       );
-      const selectedSubjects = SubjectselectedOption.map((option: { value: string | number; label: string }) =>
-        option.value.toString()
+      const selectedSubjects = SubjectselectedOption.map(
+        (option: { value: string | number; label: string }) =>
+          option.value.toString()
       );
-  
+
       if (selectedClasses.length === 0 || selectedSubjects.length === 0) {
         toast.error("Please select at least one class and one subject!", {
           position: "top-right",
@@ -332,12 +359,12 @@ const Request_a_tutorBoxes = ({
         });
         return;
       }
-  
+
       const newClassOrSubject = {
         selectedClasses,
         selectedSubjects,
       };
-  
+
       if (editIndex !== null) {
         const updated = [...classOrSubjects];
         updated[editIndex] = newClassOrSubject;
@@ -345,17 +372,16 @@ const Request_a_tutorBoxes = ({
       } else {
         setClassOrSubjects([...classOrSubjects, newClassOrSubject]);
       }
-  
+
       setClassSelectedOption([]);
       setSubjectSelectedOption([]);
       setIsClassOrSubjectModalOpen(false);
-    }
-  
-    else if (heading === "Courses") {
-      const selectedCourses = CoursesSelectedOption.map((option: { value: string | number; label: string }) =>
-        option.value.toString()
+    } else if (heading === "Courses") {
+      const selectedCourses = CoursesSelectedOption.map(
+        (option: { value: string | number; label: string }) =>
+          option.value.toString()
       );
-  
+
       if (selectedCourses.length === 0) {
         toast.error("Please select at least one course!", {
           position: "top-right",
@@ -363,11 +389,11 @@ const Request_a_tutorBoxes = ({
         });
         return;
       }
-  
+
       const newCourse = {
         selectedCourses,
       };
-  
+
       if (editIndex !== null) {
         const updated = [...courses];
         updated[editIndex] = newCourse;
@@ -375,14 +401,13 @@ const Request_a_tutorBoxes = ({
       } else {
         setCourses([...courses, newCourse]);
       }
-  
+
       setCoursesSelectedOption([]);
       setIsCoursesModalOpen(false);
     }
-  
+
     setEditIndex(null);
   };
-  
 
   const handleEdit = (index: number) => {
     if (heading === "Teaching Experience") {
@@ -419,13 +444,13 @@ const Request_a_tutorBoxes = ({
     } else if (heading === "Classes and Subjects") {
       const classSub = classOrSubjects[index];
       setClassSelectedOption(
-        classSub.selectedClasses.map((cls:string) => ({
+        classSub.selectedClasses.map((cls: string) => ({
           value: cls,
           label: cls,
         }))
       );
       setSubjectSelectedOption(
-        classSub.selectedSubjects.map((sub:string) => ({
+        classSub.selectedSubjects.map((sub: string) => ({
           value: sub,
           label: sub,
         }))
@@ -435,7 +460,7 @@ const Request_a_tutorBoxes = ({
     } else if (heading === "Courses") {
       const course = courses[index];
       setCoursesSelectedOption(
-        course.selectedCourses.map((crs:string) => ({
+        course.selectedCourses.map((crs: string) => ({
           value: crs,
           label: crs,
         }))
@@ -447,13 +472,13 @@ const Request_a_tutorBoxes = ({
 
   const handleDelete = (index: number) => {
     if (heading === "Teaching Experience") {
-      setExperiences(experiences.filter((_:any, i:number) => i !== index));
+      setExperiences(experiences.filter((_, i) => i !== index));
     } else if (heading === "Your Qualification") {
-      setQualifications(qualifications.filter((_:any, i:number) => i !== index));
+      setQualifications(qualifications.filter((_, i) => i !== index));
     } else if (heading === "Classes and Subjects") {
-      setClassOrSubjects(classOrSubjects.filter((_:any, i:number) => i !== index));
+      setClassOrSubjects(classOrSubjects.filter((_, i) => i !== index));
     } else if (heading === "Courses") {
-      setCourses(courses.filter((_:any, i:number) => i !== index));
+      setCourses(courses.filter((_, i) => i !== index));
     }
   };
 
@@ -518,7 +543,7 @@ const Request_a_tutorBoxes = ({
                   <input
                     type={type}
                     name={name}
-                    value={(formData as any)[name]}
+                    value={String(formData[name as keyof typeof formData])}
                     onChange={handleChange}
                     placeholder={placeholder}
                     className="border border-black text-[#8F8F8F] px-6 py-2 text-sm rounded-md w-full outline-none"
@@ -539,7 +564,7 @@ const Request_a_tutorBoxes = ({
                     >
                       <select
                         name={field}
-                        value={(formData as any)[field]}
+                        value={String(formData[field as keyof typeof formData])}
                         onChange={handleChange}
                         className="text-[#8F8F8F] border border-transparent cursor-pointer px-3 py-2.5 text-sm w-full outline-none"
                       >
@@ -574,7 +599,7 @@ const Request_a_tutorBoxes = ({
                     >
                       <select
                         name={field}
-                        value={(formData as any)[field]}
+                        value={String(formData[field as keyof typeof formData])}
                         onChange={handleChange}
                         disabled={formData.currentlyWorking}
                         className="w-full cursor-pointer border border-transparent text-[#8F8F8F] px-3 py-2.5 text-sm outline-none"
@@ -674,7 +699,9 @@ const Request_a_tutorBoxes = ({
                   <input
                     type={type}
                     name={name}
-                    value={(qualificationData as any)[name]}
+                    value={String(
+                      qualificationData[name as keyof typeof qualificationData]
+                    )}
                     onChange={handleChange}
                     placeholder={placeholder}
                     className="border border-black text-[#8F8F8F] px-6 py-2 text-sm rounded-md w-full outline-none"
@@ -695,7 +722,11 @@ const Request_a_tutorBoxes = ({
                     >
                       <select
                         name={field}
-                        value={(qualificationData as any)[field]}
+                        value={String(
+                          qualificationData[
+                            field as keyof typeof qualificationData
+                          ]
+                        )}
                         onChange={handleChange}
                         className="text-[#8F8F8F] border border-transparent !outline-none cursor-pointer px-3 py-2.5 text-sm w-full "
                       >
@@ -730,7 +761,11 @@ const Request_a_tutorBoxes = ({
                     >
                       <select
                         name={field}
-                        value={(qualificationData as any)[field]}
+                        value={String(
+                          qualificationData[
+                            field as keyof typeof qualificationData
+                          ]
+                        )}
                         onChange={handleChange}
                         disabled={qualificationData.currentlyStudying}
                         className="w-full cursor-pointer border border-transparent  text-[#8F8F8F] px-3 py-2.5 text-sm outline-none"
@@ -749,18 +784,21 @@ const Request_a_tutorBoxes = ({
                 </div>
               </div>
               <div className="flex gap-2 items-center">
-  <input
-    type="checkbox"
-    name="currentlyStudying"
-    checked={qualificationData.currentlyStudying}
-    onChange={handleChange}
-    className="rounded-full cursor-pointer accent-[#a435f0] outline-none focus:ring-0 focus:outline-none"
-    id="currentlyStudying"
-  />
-  <label htmlFor="currentlyStudying" className="text-sm font-medium text-gray-700">
-    Currently Studying
-  </label>
-</div>
+                <input
+                  type="checkbox"
+                  name="currentlyStudying"
+                  checked={qualificationData.currentlyStudying}
+                  onChange={handleChange}
+                  className="rounded-full cursor-pointer accent-[#a435f0] outline-none focus:ring-0 focus:outline-none"
+                  id="currentlyStudying"
+                />
+                <label
+                  htmlFor="currentlyStudying"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Currently Studying
+                </label>
+              </div>
 
               <div className="flex flex-col gap-y-2">
                 <h1 className="text-lg font-semibold text-secondary">
@@ -817,12 +855,12 @@ const Request_a_tutorBoxes = ({
                   options={Classoptions}
                   value={ClassselectedOption}
                   onChange={(selected) => {
-                    setClassSelectedOption(
-                      [...(selected as MultiValue<{
-                        value: string | number;
+                    setClassSelectedOption([
+                      ...(selected as MultiValue<{
+                        value: string;
                         label: string;
-                      }>)]
-                    );
+                      }>),
+                    ]);
                     setClassOrSubjectData((prev) => ({
                       ...prev,
                       selectedClasses: selected
@@ -844,12 +882,12 @@ const Request_a_tutorBoxes = ({
                   options={subjectOptions}
                   value={SubjectselectedOption}
                   onChange={(selected) => {
-                    setSubjectSelectedOption(
-                      [...(selected as MultiValue<{
-                        value: string | number;
+                    setSubjectSelectedOption([
+                      ...(selected as MultiValue<{
+                        value: string;
                         label: string;
-                      }>)]
-                    );
+                      }>),
+                    ]);
                     setClassOrSubjectData((prev) => ({
                       ...prev,
                       selectedSubjects: selected
@@ -905,12 +943,12 @@ const Request_a_tutorBoxes = ({
                   options={coursesOptions}
                   value={CoursesSelectedOption}
                   onChange={(selected) => {
-                    setCoursesSelectedOption(
-                      [...(selected as MultiValue<{
-                        value: string | number;
+                    setCoursesSelectedOption([
+                      ...(selected as MultiValue<{
+                        value: string;
                         label: string;
-                      }>)]
-                    );
+                      }>),
+                    ]);
                     setCoursesData((prev) => ({
                       ...prev,
                       selectedCourses: selected
@@ -940,118 +978,153 @@ const Request_a_tutorBoxes = ({
 
       {/* Display content based on heading */}
       {heading === "Teaching Experience"
-  ? experiences.map((exp: { instituteName: string; SubjectTeacher: string; Experience: string; Description: string }, index: number) => (
-      <div key={index} className="w-full flex flex-col sm:flex-row items-start gap-y-4 sm:gap-x-4 rounded-lg">
-        <Image
-          src="/images/Become-a-Tutor_images/img3.svg"
-          alt="Logo"
-          width={60}
-          height={60}
-          className="rounded-full mx-auto sm:mx-0"
-        />
-        <div className="flex flex-col w-full gap-y-4">
-          <div className="flex justify-between">
-            <div className="flex flex-col gap-y-2">
-              <h1 className="text-xl sm:text-2xl font-semibold text-secondary">{exp.instituteName}</h1>
-              <h2 className="text-base">{exp.SubjectTeacher}</h2>
-              <h3 className="text-sm text-[#8F8F8F]">{exp.Experience}</h3>
-            </div>
-            <div className="flex gap-x-4 mt-2">
+        ? experiences.map(
+            (
+              exp: {
+                instituteName: string;
+                SubjectTeacher: string;
+                Experience: string;
+                Description: string;
+              },
+              index: number
+            ) => (
               <div
-                className="w-8 h-8 flex justify-center items-center bg-primary text-white text-xl rounded-full cursor-pointer"
-                onClick={() => handleDelete(index)}
+                key={index}
+                className="w-full flex flex-col sm:flex-row items-start gap-y-4 sm:gap-x-4 rounded-lg"
               >
-                <RiDeleteBin5Line />
+                <Image
+                  src="/images/Become-a-Tutor_images/img3.svg"
+                  alt="Logo"
+                  width={60}
+                  height={60}
+                  className="rounded-full mx-auto sm:mx-0"
+                />
+                <div className="flex flex-col w-full gap-y-4">
+                  <div className="flex justify-between">
+                    <div className="flex flex-col gap-y-2">
+                      <h1 className="text-xl sm:text-2xl font-semibold text-secondary">
+                        {exp.instituteName}
+                      </h1>
+                      <h2 className="text-base">{exp.SubjectTeacher}</h2>
+                      <h3 className="text-sm text-[#8F8F8F]">
+                        {exp.Experience}
+                      </h3>
+                    </div>
+                    <div className="flex gap-x-4 mt-2">
+                      <div
+                        className="w-8 h-8 flex justify-center items-center bg-primary text-white text-xl rounded-full cursor-pointer"
+                        onClick={() => handleDelete(index)}
+                      >
+                        <RiDeleteBin5Line />
+                      </div>
+                      <div
+                        className="w-8 h-8 flex justify-center items-center bg-primary text-white text-xl rounded-full cursor-pointer"
+                        onClick={() => handleEdit(index)}
+                      >
+                        <MdOutlineEdit />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[15.6px] text-[#8F8F8F]">
+                    {exp.Description}
+                  </p>
+                </div>
               </div>
-              <div
-                className="w-8 h-8 flex justify-center items-center bg-primary text-white text-xl rounded-full cursor-pointer"
-                onClick={() => handleEdit(index)}
-              >
-                <MdOutlineEdit />
-              </div>
-            </div>
-          </div>
-          <p className="text-[15.6px] text-[#8F8F8F]">{exp.Description}</p>
-        </div>
-      </div>
-    ))
-  : heading === "Your Qualification"
-  ? qualifications.map((qual, index) => (
-      <div key={index} className="w-full flex flex-col sm:flex-row items-start gap-y-4 sm:gap-x-4 rounded-lg">
-        <Image
-          src="/images/Become-a-Tutor_images/img3.svg"
-          alt="Logo"
-          width={60}
-          height={60}
-          className="rounded-full mx-auto sm:mx-0"
-        />
-        <div className="flex flex-col w-full gap-y-4">
-          <div className="flex justify-between">
-            <div className="flex flex-col gap-y-2">
-              <h1 className="text-xl sm:text-2xl font-semibold text-secondary">{qual.institute}</h1>
-              <h2 className="text-base">{qual.degree}, {qual.fieldOfStudy}</h2>
-              <h3 className="text-sm text-[#8F8F8F]">{qual.year}</h3>
-            </div>
-            <div className="flex gap-x-4 mt-2">
-              <div
-                className="w-8 h-8 flex justify-center items-center bg-primary text-white text-xl rounded-full cursor-pointer"
-                onClick={() => handleDelete(index)}
-              >
-                <RiDeleteBin5Line />
-              </div>
-              <div
-                className="w-8 h-8 flex justify-center items-center bg-primary text-white text-xl rounded-full cursor-pointer"
-                onClick={() => handleEdit(index)}
-              >
-                <MdOutlineEdit />
-              </div>
-            </div>
-          </div>
-          <p className="text-[15.6px] text-[#8F8F8F]">{qual.description}</p>
-        </div>
-      </div>
-    ))
-  : heading === "Classes and Subjects"
-  ? classOrSubjects.map((item, index) => (
-      <div key={index} className="w-full flex flex-col sm:flex-row items-start gap-y-4 sm:gap-x-4 rounded-lg">
-        <div className="flex flex-col w-full gap-y-4">
-          <div className="flex justify-between">
-            <div className="flex flex-col w-full gap-y-4 px-1">
-              <div className="flex justify-between items-center">
-                <h1 className="font-bold text-xl sm:text-2xl">Classes / Subjects</h1>
-              </div>
-              <BoxChips
-                ChipsData={item.selectedClasses}
-                val2={item.selectedSubjects}
-                onEmpty={() => handleDelete(index)}
-                showDeleteAll={false}
+            )
+          )
+        : heading === "Your Qualification"
+        ? qualifications.map((qual, index) => (
+            <div
+              key={index}
+              className="w-full flex flex-col sm:flex-row items-start gap-y-4 sm:gap-x-4 rounded-lg"
+            >
+              <Image
+                src="/images/Become-a-Tutor_images/img3.svg"
+                alt="Logo"
+                width={60}
+                height={60}
+                className="rounded-full mx-auto sm:mx-0"
               />
-            </div>
-          </div>
-        </div>
-      </div>
-    ))
-  : heading === "Courses"
-  ? courses.map((course, index) => (
-      <div key={index} className="w-full flex flex-col sm:flex-row items-start gap-y-4 sm:gap-x-4 rounded-lg">
-        <div className="flex flex-col w-full gap-y-4">
-          <div className="flex justify-between">
-            <div className="flex flex-col w-full gap-y-4 px-1">
-              <div className="flex justify-between items-center">
-                <h1 className="font-bold text-xl sm:text-2xl">Courses</h1>
-                <div className="flex gap-x-4"></div>
+              <div className="flex flex-col w-full gap-y-4">
+                <div className="flex justify-between">
+                  <div className="flex flex-col gap-y-2">
+                    <h1 className="text-xl sm:text-2xl font-semibold text-secondary">
+                      {qual.institute}
+                    </h1>
+                    <h2 className="text-base">
+                      {qual.degree}, {qual.fieldOfStudy}
+                    </h2>
+                    <h3 className="text-sm text-[#8F8F8F]">{qual.year}</h3>
+                  </div>
+                  <div className="flex gap-x-4 mt-2">
+                    <div
+                      className="w-8 h-8 flex justify-center items-center bg-primary text-white text-xl rounded-full cursor-pointer"
+                      onClick={() => handleDelete(index)}
+                    >
+                      <RiDeleteBin5Line />
+                    </div>
+                    <div
+                      className="w-8 h-8 flex justify-center items-center bg-primary text-white text-xl rounded-full cursor-pointer"
+                      onClick={() => handleEdit(index)}
+                    >
+                      <MdOutlineEdit />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[15.6px] text-[#8F8F8F]">
+                  {qual.description}
+                </p>
               </div>
-              <BoxChipsCourses
-                ChipsData={course.selectedCourses}
-                onEmpty={() => handleDelete(index)}
-              />
             </div>
-          </div>
-        </div>
-      </div>
-    ))
-  : null}
-
+          ))
+        : heading === "Classes and Subjects"
+        ? classOrSubjects.map((item, index) => (
+            <div
+              key={index}
+              className="w-full flex flex-col sm:flex-row items-start gap-y-4 sm:gap-x-4 rounded-lg"
+            >
+              <div className="flex flex-col w-full gap-y-4">
+                <div className="flex justify-between">
+                  <div className="flex flex-col w-full gap-y-4 px-1">
+                    <div className="flex justify-between items-center">
+                      <h1 className="font-bold text-xl sm:text-2xl">
+                        Classes / Subjects
+                      </h1>
+                    </div>
+                    <BoxChips
+                      ChipsData={item.selectedClasses}
+                      val2={item.selectedSubjects}
+                      onEmpty={() => handleDelete(index)}
+                      showDeleteAll={false}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        : heading === "Courses"
+        ? courses.map((course, index) => (
+            <div
+              key={index}
+              className="w-full flex flex-col sm:flex-row items-start gap-y-4 sm:gap-x-4 rounded-lg"
+            >
+              <div className="flex flex-col w-full gap-y-4">
+                <div className="flex justify-between">
+                  <div className="flex flex-col w-full gap-y-4 px-1">
+                    <div className="flex justify-between items-center">
+                      <h1 className="font-bold text-xl sm:text-2xl">Courses</h1>
+                      <div className="flex gap-x-4"></div>
+                    </div>
+                    <BoxChipsCourses
+                      ChipsData={course.selectedCourses}
+                      onEmpty={() => handleDelete(index)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        : null}
     </div>
   );
 };

@@ -72,6 +72,14 @@ export const GeneralForm = () => {
         step === 1 ? "p-6 md:p-12 border-2 border-dotted border-stone-900 shadow-none" : "p-0 border-none shadow-none"
       }`}>
         {step === 1 ? (
+          <Register_a_tutor 
+          handleBack={handleBack} 
+          formData={formData} 
+          imagePreview={imagePreview} 
+          videoFile={videoFile}
+          handleSubmitAndReset={handleSubmitAndReset}
+        />
+        ) : (
           <FoamInputs
             formData={formData}
             setFormData={setFormData}
@@ -83,14 +91,7 @@ export const GeneralForm = () => {
             setVideoUrl={setVideoUrl}
             handleNext={handleNext}
           />
-        ) : (
-          <Register_a_tutor 
-            handleBack={handleBack} 
-            formData={formData} 
-            imagePreview={imagePreview} 
-            videoFile={videoFile}
-            handleSubmitAndReset={handleSubmitAndReset}
-          />
+          
         )}
       </div>
     </main>

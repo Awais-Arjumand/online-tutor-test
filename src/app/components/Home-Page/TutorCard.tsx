@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useId } from "react";
+import React from "react";
 import { Badge } from "./Badge";
 import { RatingStars } from "./RatingStars";
 import { FaArrowRightLong } from "react-icons/fa6";

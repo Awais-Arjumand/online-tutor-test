@@ -111,7 +111,7 @@ export default function Home() {
               Connect with Perfect Teacher
             </h1>
             <p className="font-normal text-sm sm:text-base text-center max-w-[1050px]">
-            We connect you with the most qualified and experienced teachers, ensuring you receive top-quality education tailored to your needs. Whether you're looking for academic support or skill development, our expert tutors are here to guide you every step of the way.
+            We connect you with the most qualified and experienced teachers, ensuring you receive top-quality education tailored to your needs. Whether you&apos;re looking for academic support or skill development, our expert tutors are here to guide you every step of the way.
             </p>
           </div>
           <div className="w-full h-full px-4 md:px-20">

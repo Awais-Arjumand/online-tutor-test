@@ -1,6 +1,6 @@
 
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { InputField } from "./InputField";
 import { SelectField } from "./SelectField";
 import { TextAreaField } from "./TextAreaField";
@@ -227,7 +227,7 @@ const FoamInputs: React.FC<FoamInputsProps> = ({
             </h1>
             <h1 className="font-normal text-base text-[#1F1D0D] text-center px-4">
               Please describe your teaching experience and style in a brief
-              introduction video for students' reference.
+              introduction video for students&apos; reference.
             </h1>
 
             <label className="w-fit py-3 px-4 flex gap-x-2 text-white cursor-pointer font-semibold bg-[#1F1D0D] rounded-md">

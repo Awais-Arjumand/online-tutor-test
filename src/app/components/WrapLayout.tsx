@@ -12,7 +12,6 @@ interface WrapLayoutProps {
 export const WrapLayout: React.FC<WrapLayoutProps> = ({ children }) => {
   const pathname = usePathname();
 
-  // List of allowed routes where NavBar & Footer should appear
   const allowedRoutes = [
     "/",
     "/tutors",
@@ -22,9 +21,10 @@ export const WrapLayout: React.FC<WrapLayoutProps> = ({ children }) => {
     "/blog",
     "/faqs",
     "/how-it-works",
+    "/login",
+    "/signup",
   ];
 
-  // Check if current route is allowed
   const shouldShowNavAndFooter = allowedRoutes.includes(pathname || "");
 
   return (

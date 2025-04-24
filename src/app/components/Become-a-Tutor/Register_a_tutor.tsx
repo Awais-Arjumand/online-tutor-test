@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface RegisterATutorProps {
+export interface RegisterATutorProps {
   handleBack: () => void;
   formData: {
     fullName: string;
@@ -23,14 +23,14 @@ interface RegisterATutorProps {
   handleSubmitAndReset: () => void;
 }
 
-interface Experience {
+export interface Experience {
   instituteName: string;
   SubjectTeacher: string;
   Experience: string;
   Description: string;
 }
 
-interface Qualification {
+export interface Qualification {
   degree: string;
   institute: string;
   fieldOfStudy: string;
@@ -38,21 +38,48 @@ interface Qualification {
   description: string;
 }
 
-interface ClassOrSubject {
+export interface ClassOrSubject {
   selectedClasses: string[];
   selectedSubjects: string[];
 }
 
-interface Course {
+export interface QualFormData {
+  degree: string;
+  institute: string;
+  fieldOfStudy: string;
+  startMonth: string;
+  startYear: string;
+  endMonth: string;
+  endYear: string;
+  currentlyStudying: boolean;
+  description: string;
+}
+
+export interface FormData {
+  instituteName: string;
+  designation: string;
+  startMonth: string;
+  startYear: string;
+  endMonth: string;
+  endYear: string;
+  currentlyWorking: boolean;
+  description: string;
+}
+export interface Course {
   selectedCourses: string[];
 }
 
-const Register_a_tutor: React.FC<RegisterATutorProps> = ({ 
-  handleBack, 
+export interface OptionType {
+  value: string;
+  label: string;
+}
+
+const Register_a_tutor: React.FC<RegisterATutorProps> = ({
+  handleBack,
   formData,
   imagePreview,
   videoFile,
-  handleSubmitAndReset
+  handleSubmitAndReset,
 }) => {
   const [feeValue, setFeeValue] = useState<string>("");
   const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -62,7 +89,8 @@ const Register_a_tutor: React.FC<RegisterATutorProps> = ({
 
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
   const [isQualModalOpen, setIsQualModalOpen] = useState(false);
-  const [isClassOrSubjectModalOpen, setIsClassOrSubjectModalOpen] = useState(false);
+  const [isClassOrSubjectModalOpen, setIsClassOrSubjectModalOpen] =
+    useState(false);
   const [isCoursesModalOpen, setIsCoursesModalOpen] = useState(false);
 
   const [expFormData, setExpFormData] = useState({
@@ -88,9 +116,13 @@ const Register_a_tutor: React.FC<RegisterATutorProps> = ({
     description: "",
   });
 
-  const [ClassselectedOption, setClassSelectedOption] = useState<string[]>([]);
-  const [SubjectselectedOption, setSubjectSelectedOption] = useState<string[]>([]);
-  const [CoursesSelectedOption, setCoursesSelectedOption] = useState<string[]>([]);
+  const [ClassselectedOption, setClassSelectedOption] = useState<OptionType[]>([]);
+  const [SubjectselectedOption, setSubjectSelectedOption] = useState<OptionType[]>(
+    []
+  );
+  const [CoursesSelectedOption, setCoursesSelectedOption] = useState<OptionType[]>(
+    []
+  );
 
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
@@ -99,21 +131,26 @@ const Register_a_tutor: React.FC<RegisterATutorProps> = ({
   };
 
   const validateForm = () => {
-    if (!formData.fullName || !formData.email || !formData.phoneNumber || 
-        !formData.password || !formData.confirmPassword) {
+    if (
+      !formData.fullName ||
+      !formData.email ||
+      !formData.phoneNumber ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
       return false;
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
       return false;
     }
-    
+
     if (!feeValue) {
       toast.error("Please enter your fee per hour");
       return false;
     }
-    
+
     return true;
   };
 
@@ -134,14 +171,14 @@ const Register_a_tutor: React.FC<RegisterATutorProps> = ({
     };
 
     console.log("Complete Tutor Registration Data:", completeData);
-alert("Registration successful!");
-    
+    alert("Registration successful!");
+
     setFeeValue("");
     setExperiences([]);
     setQualifications([]);
     setClassOrSubjects([]);
     setCourses([]);
-    
+
     handleSubmitAndReset();
   };
 
@@ -183,7 +220,7 @@ alert("Registration successful!");
   return (
     <div className="w-full flex flex-col gap-y-10">
       <ToastContainer />
-      
+
       {Request_a_tutorBoxesData.map((item, key) => (
         <Request_a_tutorBoxes
           heading={item.heading}
@@ -224,15 +261,15 @@ alert("Registration successful!");
         />
       ))}
 
-      <div className="w-full h-fit border border-dotted flex flex-col rounded-lg gap-y-7 px-9 py-9">
+      <div className="w-full h-fit border border-dotted border-black flex flex-col rounded-lg gap-y-7 px-9 py-9">
         <h1 className="font-extrabold text-2xl sm:text-3xl">Tuition Fee</h1>
         <div className="w-full h-fit flex flex-col gap-y-5">
           <h1 className="font-semibold text-xl sm:text-2xl">Fee/per hour</h1>
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={feeValue}
             onChange={handleFeeChange}
-            className="w-full py-3 px-5 rounded-md font-normal text-base placeholder:font-normal outline-none text-[#8F8F8F] border border-gray-500" 
+            className="w-full py-3 px-5 rounded-md font-normal text-base placeholder:font-normal outline-none text-[#8F8F8F] border border-gray-500"
             placeholder="Enter Here"
           />
         </div>
