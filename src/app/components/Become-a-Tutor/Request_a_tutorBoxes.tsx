@@ -114,7 +114,7 @@ const Request_a_tutorBoxes = ({
     selectedClasses: [] as string[],
     selectedSubjects: [] as string[],
   });
-  const [CoursesData, setCoursesData] = useState({
+  const [, setCoursesData] = useState({
     selectedCourses: [] as string[],
   });
 
