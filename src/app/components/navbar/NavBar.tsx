@@ -7,7 +7,6 @@ import { RxCross2 } from "react-icons/rx";
 
 export const NavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/");
 
@@ -44,7 +43,7 @@ export const NavBar: React.FC = () => {
 
   return (
     <>
-      <section className="w-full border-b-2  border-gray-300 py-2 bg-white fixed top-0 z-50">
+      <section className="w-full border-b-2 border-gray-300 py-2 bg-white fixed top-0 z-50">
         <div className="flex items-center justify-between px-5 sm:px-7 lg:px-20 h-16 lg:h-20">
           <div className="w-fit h-fit flex items-center gap-x-3">
             <img src="/images/NavBar_images/img1.svg" alt="Logo" className="h-9" />
@@ -66,7 +65,9 @@ export const NavBar: React.FC = () => {
                     key={tab.route}
                     href={tab.route}
                     className={`px-4 py-2 rounded-lg text-sm cursor-pointer transition ${
-                      activeTab === tab.route ? "bg-purple-100 text-primary" : "hover:bg-purple-100 hover:text-primary"
+                      activeTab === tab.route
+                        ? "bg-purple-100 text-primary"
+                        : "hover:bg-purple-100 hover:text-primary"
                     }`}
                     onClick={() => setActiveTab(tab.route)}
                   >
@@ -75,46 +76,41 @@ export const NavBar: React.FC = () => {
                 ))}
               </ul>
 
-              <div className="relative dropdown">
+              {/* Hover dropdown */}
+              <div className="relative group">
                 <p
                   className={`px-4 py-2 flex rounded-lg gap-x-2 text-sm items-center cursor-pointer ${
                     ["/about", "/blog", "/faqs", "/how-it-works"].includes(activeTab)
                       ? "bg-purple-100 text-primary"
                       : "hover:bg-purple-100 hover:text-primary"
                   }`}
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
                   More <FaChevronDown className="text-xs" />
                 </p>
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 border border-black bg-white  rounded-lg shadow py-2">
-                    <ul className="flex flex-col gap-y-2">
-                      {[
-                        { link: "About", route: "/about" },
-                        { link: "Blog", route: "/blog" },
-                        { link: "FAQs", route: "/faqs" },
-                        { link: "How it Works", route: "/how-it-works" },
-                      ].map((tab) => (
-                        <Link
-                          key={tab.route}
-                          href={tab.route}
-                          className={`flex px-2 py-2 gap-x-1 items-center cursor-pointer transition ${
-                            activeTab === tab.route
-                              ? "bg-gray-100 text-primary"
-                              : "hover:bg-gray-100 hover:text-primary"
-                          }`}
-                          onClick={() => {
-                            setActiveTab(tab.route);
-                            setDropdownOpen(false);
-                          }}
-                        >
-                          <LuDot className="text-2xl" />
-                          {tab.link}
-                        </Link>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <div className="absolute right-0 mt-2 w-48 border border-black bg-white rounded-lg shadow py-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200">
+                  <ul className="flex flex-col gap-y-2">
+                    {[
+                      { link: "About", route: "/about" },
+                      { link: "Blog", route: "/blog" },
+                      { link: "FAQs", route: "/faqs" },
+                      { link: "How it Works", route: "/how-it-works" },
+                    ].map((tab) => (
+                      <Link
+                        key={tab.route}
+                        href={tab.route}
+                        className={`flex px-2 py-2 gap-x-1 items-center cursor-pointer transition ${
+                          activeTab === tab.route
+                            ? "bg-gray-100 text-primary"
+                            : "hover:bg-gray-100 hover:text-primary"
+                        }`}
+                        onClick={() => setActiveTab(tab.route)}
+                      >
+                        <LuDot className="text-2xl" />
+                        {tab.link}
+                      </Link>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
 
@@ -168,6 +164,7 @@ export const NavBar: React.FC = () => {
             </Link>
           ))}
 
+          {/* Mobile dropdown (click-based) */}
           <div className="dropdown">
             <p
               className={`px-4 py-2 cursor-pointer flex items-center gap-2 ${
